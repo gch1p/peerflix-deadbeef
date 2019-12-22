@@ -1,6 +1,6 @@
 # peerflix-deadbeef
 
-**peerflix-deadbeef** is a wrapper script to use (peerflix)[https://github.com/mafintosh/peerflix] to listen to music from torrents in (DeaDBeeF)[https://github.com/DeaDBeeF-Player/deadbeef].
+**peerflix-deadbeef** is a wrapper script to use [peerflix](https://github.com/mafintosh/peerflix) to listen to music from torrents in [DeaDBeeF](https://github.com/DeaDBeeF-Player/deadbeef).
 
 ### Usage
 
