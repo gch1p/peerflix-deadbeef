@@ -37,7 +37,7 @@ usage() {
 }
 
 mktemp_m3u() {
-    echo $(mktemp $TMPDIR/$(uuidgen).m3u)
+    mktemp $TMPDIR/$(uuidgen).m3u
 }
 
 VERSION="0.2"
