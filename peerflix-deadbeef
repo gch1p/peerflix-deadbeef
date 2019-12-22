@@ -1,27 +1,70 @@
 #!/bin/bash
 
-[ -z "$1" ] && {
-    echo "usage: peerflix-deadbeef <magnet or torrent>"
+error() {
+    echo "error: $@"
     exit 1
 }
+
+installed() {
+    command -v "$1" > /dev/null
+    return $?
+}
+
+get_deadbeef() {
+    if [[ "$OSTYPE" == "darwin"* ]]; then
+        echo "/Applications/DeaDBeeF.app/Contents/MacOS/DeaDBeeF"
+    else
+        echo deadbeef
+    fi
+}
+
+download() {
+    local source="$1"
+    local target="$2"
+
+    if installed curl; then
+        curl -o "$target" "$source"
+    elif installed wget; then
+        wget -O "$target" "$source"
+    fi
+}
+
+usage() {
+    echo "$NAME v$VERSION"
+    echo
+    echo "usage: $NAME <magnet or torrent>"
+    exit
+}
+
+mktemp_m3u() {
+    echo $(mktemp $TMPDIR/$(uuidgen).m3u)
+}
+
+VERSION="0.2"
+NAME="peerflix-deadbeef"
+DEADBEEF="$(get_deadbeef)"
+
+[ -z "$1" ] && usage
+
+installed "$DEADBEEF" || error "$DEADBEEF is not found"
+installed peerflix || error "peerflix is not found in PATH"
+installed curl || installed wget || error "curl or wget is required"
 
 if [[ "$1" == "--ready" ]]; then
     host="$2"
     port="$3"
-
-    file=$(mktemp --suffix=".m3u")
-
+    file=$(mktemp_m3u)
     url="http://$host:$port/.m3u"
-    usleep 100000
 
-    curl "$url" > "$file"
-    deadbeef "$file" &
+    usleep 100000
+    download "$url" "$file"
+    $DEADBEEF "$file" &
 
     sleep 3
     rm "$file"
 else
     host="127.0.0.1"
-    port=$(shuf -i 10000-20000 -n1)
+    port=$(( ( RANDOM % 10000 ) + 10000 ))
 
     peerflix "$1" -ardh $host -p $port --on-listening "$0 --ready $host $port"
 fi
