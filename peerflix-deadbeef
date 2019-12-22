@@ -23,5 +23,5 @@ else
     host="127.0.0.1"
     port=$(shuf -i 10000-20000 -n1)
 
-    peerflix "$1" -ardqh $host -p $port --on-listening "$0 --ready $host $port"
+    peerflix "$1" -ardh $host -p $port --on-listening "$0 --ready $host $port"
 fi
