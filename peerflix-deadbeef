@@ -1,0 +1,27 @@
+#!/bin/bash
+
+[ -z "$1" ] && {
+    echo "usage: peerflix-deadbeef <magnet or torrent>"
+    exit 1
+}
+
+if [[ "$1" == "--ready" ]]; then
+    host="$2"
+    port="$3"
+
+    file=$(mktemp --suffix=".m3u")
+
+    url="http://$host:$port/.m3u"
+    usleep 100000
+
+    curl "$url" > "$file"
+    deadbeef "$file" &
+
+    sleep 3
+    rm "$file"
+else
+    host="127.0.0.1"
+    port=$(shuf -i 10000-20000 -n1)
+
+    peerflix "$1" -ardqh $host -p $port --on-listening "$0 --ready $host $port"
+fi
