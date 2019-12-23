@@ -18,6 +18,12 @@ get_deadbeef() {
     fi
 }
 
+tempdir() {
+    for TMPDIR in "$TMPDIR" "$TMP" /var/tmp /tmp; do
+        test -d "$TMPDIR" && echo "$TMPDIR" && break
+    done
+}
+
 download() {
     local source="$1"
     local target="$2"
@@ -36,11 +42,11 @@ usage() {
     exit
 }
 
-mktemp_m3u() {
-    mktemp $TMPDIR/$(uuidgen).m3u
+tempname() {
+    echo $(tempdir)/$(uuidgen).m3u
 }
 
-VERSION="0.2"
+VERSION="0.3"
 NAME="peerflix-deadbeef"
 DEADBEEF="$(get_deadbeef)"
 
@@ -53,7 +59,7 @@ installed curl || installed wget || error "curl or wget is required"
 if [[ "$1" == "--ready" ]]; then
     host="$2"
     port="$3"
-    file=$(mktemp_m3u)
+    file=$(tempname)
     url="http://$host:$port/.m3u"
 
     usleep 100000
