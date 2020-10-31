@@ -16,6 +16,11 @@ On Linux, `deadbeef` is expected to be in your `$PATH`.
 
 On macOS, script assumes that `DeaDBeeF.app` is installed to `/Applications`.
 
+I also recommend installing my patched version of peerflix. It adds one tiny hack to m3u playlist creating code:
+```
+npm i -g git+https://github.com/gch1p/peerflix
+```
+
 ## Install
 
 ```
